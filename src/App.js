@@ -1,11 +1,16 @@
+import Crawl from 'react-star-wars-crawl'
+import 'react-star-wars-crawl/lib/index.css'
+
 import styled, { css } from 'styled-components'
 import useGetPeople from './useGetPeople'
+
+import error from './images/error.png'
 
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  padding: 5em;
+  background-color: black;
 `
 
 const CustomFont = css`
@@ -17,16 +22,18 @@ const Loading = styled.p`
   color: green;
 `
 
-const Error = styled.p`
-  ${CustomFont}
-  color: red;
+const Error = styled.img`
+  background-color: black;
+  width: 60%;
+  height: 60%;
+  align-self: center;
 `
 
 const Person = styled.p`
   ${CustomFont}
   padding: 0;
   margin: 0.3em;
-  color: blue;
+  color: yellow;
 `
 
 function App() {
@@ -34,12 +41,14 @@ function App() {
 
   return (
     <Wrapper>
-      {isLoading && <Loading>Loading...</Loading>}
-      {hasError && <Error>Error...</Error>}
-      {people &&
-        people.map((item, index) => (
-          <Person key={index}>{`${item.name}`}</Person>
-        ))}
+      {hasError && <Error src={error} alt="error" />}
+      <Crawl>
+        {isLoading && <Loading>Loading...</Loading>}
+        {people &&
+          people.map((item, index) => (
+            <Person key={index}>{`${item.name}`}</Person>
+          ))}
+      </Crawl>
     </Wrapper>
   )
 }

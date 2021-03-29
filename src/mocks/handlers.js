@@ -9,9 +9,9 @@ const patchHandler = rest.get('*/people', async (req, res, ctx) => {
   const originalResponse = await ctx.fetch(req)
   const data = await originalResponse.json()
 
-  data.results.push({
+  data.results.unshift({
     uid: '11',
-    name: 'Han Solo - Smuggler. Scoundrel. Hero.',
+    name: 'A long time ago, in a galaxy far, far away....',
     url: 'https://www.swapi.tech/api/people/11',
   })
 
@@ -28,4 +28,4 @@ export const allHandlers = {
   error: errorHandler,
 }
 
-export const handlers = [allHandlers.error]
+export const handlers = [allHandlers.quotes]
