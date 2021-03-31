@@ -6,13 +6,15 @@ import * as RTL from './setupTests'
 import App from '../App'
 import { allHandlers } from '../mocks/handlers'
 
-/*
-const server = setupServer(
-  rest.get('/people', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json({ results: mockPeople.results }))
-  })
-)
-*/
+import { rest } from 'msw'
+import { dataPeople } from '../mocks/mockedData/dataPeople'
+
+// Setup requests interception in NodeJS with the given request handlers
+// const server = setupServer(
+//   rest.get('*/people', (req, res, ctx) => {
+//     return res(ctx.status(200), ctx.json({ results: dataPeople.results }))
+//   })
+// )
 
 const server = setupServer(allHandlers.quotes)
 
@@ -26,32 +28,31 @@ afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
 describe('<App />', () => {
-  it('should have a list of names', async () => {
+  it('should render a list of names', async () => {
     RTL.render(<App />)
 
     RTL.screen.getByText('Loading...')
 
-    await RTL.screen.findByText(/Luke Skywalker/i)
+    await RTL.screen.findByText(/Luke Skywalker - "We're gonna have company"/i)
   })
 
-  it('should have an error message', async () => {
-    // override the initial "GET /people" request handler to return a 500 Server Error
+  it('should render an error image', async () => {
+    // override the initial "GET /people" request handler to return a 404 Page not found error
 
-    /*
-    server.use(
-      rest.get('/people', (req, res, ctx) => {
-        return res.once(
-          ctx.status(500),
-          ctx.json({ message: 'Internal server error' })
-        )
-      })
-    )
-    */
+    // server.use(
+    //   rest.get('*/people', (req, res, ctx) => {
+    //     // triggers only once
+    //     return res.once(
+    //       ctx.status(404),
+    //       ctx.json({ message: 'Page not found' })
+    //     )
+    //   })
+    // )
 
     server.use(allHandlers.error)
 
     RTL.render(<App />)
 
-    await RTL.screen.findByText(/error.../i)
+    await RTL.screen.findByAltText(/error/i)
   })
 })

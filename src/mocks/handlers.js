@@ -1,17 +1,19 @@
 import { rest } from 'msw'
-import { mockPeople } from '../mockedData/mockPeople'
+import { dataPeople } from './mockedData/dataPeople'
 
 const quotesHandler = rest.get('*/people', (req, res, ctx) => {
-  return res(ctx.status(200), ctx.json(mockPeople))
+  return res(ctx.status(200), ctx.json(dataPeople))
 })
 
 const patchHandler = rest.get('*/people', async (req, res, ctx) => {
+  // req.url.searchParams.get('id') target/perform actions based on query parameters
+
   const originalResponse = await ctx.fetch(req)
   const data = await originalResponse.json()
 
   data.results.unshift({
     uid: '11',
-    name: 'A long time ago, in a galaxy far, far away....',
+    name: 'A long time ago, in a galaxy far, far away...',
     url: 'https://www.swapi.tech/api/people/11',
   })
 
@@ -19,7 +21,7 @@ const patchHandler = rest.get('*/people', async (req, res, ctx) => {
 })
 
 const errorHandler = rest.get('*/people', (req, res, ctx) => {
-  return res(ctx.status(500), ctx.json({ message: 'Internal server error' }))
+  return res(ctx.status(404), ctx.json({ message: 'Page not found' }))
 })
 
 export const allHandlers = {
@@ -28,4 +30,5 @@ export const allHandlers = {
   error: errorHandler,
 }
 
-export const handlers = [allHandlers.quotes]
+// choose between quotes, patch or error
+export const handlers = []
